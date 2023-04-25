@@ -254,6 +254,10 @@ def launch_setup(context, *args, **kwargs):
     
     moveit_py_yaml = load_yaml("moveit2_tutorials", "config/motion_planning_python_api_tutorial.yaml")
     
+    moveit_py_args = dict()
+    for d in [moveit_controllers, moveit_py_yaml]:
+    	moveit_py_args.update(d)
+    
     moveit_py_node = Node(
         name="moveit_py",
         package="moveit2_tutorials",
@@ -262,7 +266,7 @@ def launch_setup(context, *args, **kwargs):
         parameters=[
             # Adding the following line breaks it
             #{"test": "test"},
-            moveit_py_yaml,
+            moveit_py_args,
             ]        
     )
     
