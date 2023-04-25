@@ -193,11 +193,6 @@ def launch_setup(context, *args, **kwargs):
         "warehouse_host": warehouse_sqlite_path,
     }
 
-    moveit_py_yaml = load_yaml("moveit2_tutorials", "config/motion_planning_python_api_tutorial.yaml")
-    
-    #I think the parameters are supposed to be loaded directly
-    #moveit_py_params = {"moveit_cpp": moveit_py_yaml}
-
     # Start the actual move_group node/action server
     move_group_node = Node(
         package="moveit_ros_move_group",
@@ -214,11 +209,10 @@ def launch_setup(context, *args, **kwargs):
             planning_scene_monitor_parameters,
             {"use_sim_time": use_sim_time},
             warehouse_ros_config,
-            {"publish_robot_description_semantic": True},
             
-            # Loading it here as well to see with ros2 param list if the parameters look corretly
-            # MoveItPy node dies too quickly
-            moveit_py_yaml,
+            #Publish the descriptions for moveitpy
+            {"publish_robot_description": True},
+            {"publish_robot_description_semantic": True},
         ],
     )
 
@@ -258,25 +252,21 @@ def launch_setup(context, *args, **kwargs):
         output="screen",
     )
     
+    moveit_py_yaml = load_yaml("moveit2_tutorials", "config/motion_planning_python_api_tutorial.yaml")
+    
     moveit_py_node = Node(
         name="moveit_py",
         package="moveit2_tutorials",
         executable="motion_planning_python_api_tutorial.py",
         output="both",
         parameters=[
-            robot_description,
-            # For some reason this didn't work, instead publish it above
-            #robot_description_semantic,
-            robot_description_kinematics,
-            
-            # Neither way works
-            {"moveit_cpp": moveit_py_yaml},
+            # Adding the following line breaks it
+            #{"test": "test"},
             moveit_py_yaml,
-            
-            # Directly setting it also does not work
-            {"planning_pipelines": {"pipeline_names": ["ompl", "chomp"]}},
             ]        
     )
+    
+
 
     nodes_to_start = [move_group_node, rviz_node, servo_node, moveit_py_node]
 
