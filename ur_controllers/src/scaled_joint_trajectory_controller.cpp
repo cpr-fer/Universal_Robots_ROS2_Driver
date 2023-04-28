@@ -259,7 +259,8 @@ controller_interface::return_type ScaledJointTrajectoryController::update(const 
     }
   }
 
-  publish_state(time, state_desired, state_current, state_error);
+  // Comented out param ensures compability with ROS2 humble
+  publish_state(/*time,*/ state_desired, state_current, state_error);
   return controller_interface::return_type::OK;
 }
 
