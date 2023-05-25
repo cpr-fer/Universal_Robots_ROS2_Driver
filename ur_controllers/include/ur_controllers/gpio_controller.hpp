@@ -56,6 +56,7 @@
 #include "rclcpp/time.hpp"
 #include "rclcpp/duration.hpp"
 #include "std_msgs/msg/bool.hpp"
+#include "gpio_controller_parameters.hpp"
 
 namespace ur_controllers
 {
@@ -76,6 +77,8 @@ enum CommandInterfaces
   PAYLOAD_ASYNC_SUCCESS = 30,
   ZERO_FTSENSOR_CMD = 31,
   ZERO_FTSENSOR_ASYNC_SUCCESS = 32,
+  HAND_BACK_CONTROL_CMD = 33,
+  HAND_BACK_CONTROL_ASYNC_SUCCESS = 34,
 };
 
 enum StateInterfaces
@@ -125,6 +128,9 @@ private:
   bool resendRobotProgram(std_srvs::srv::Trigger::Request::SharedPtr req,
                           std_srvs::srv::Trigger::Response::SharedPtr resp);
 
+  bool handBackControl(std_srvs::srv::Trigger::Request::SharedPtr req,
+                       std_srvs::srv::Trigger::Response::SharedPtr resp);
+
   bool setPayload(const ur_msgs::srv::SetPayload::Request::SharedPtr req,
                   ur_msgs::srv::SetPayload::Response::SharedPtr resp);
 
@@ -152,6 +158,7 @@ protected:
 
   // services
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr resend_robot_program_srv_;
+  rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr hand_back_control_srv_;
   rclcpp::Service<ur_msgs::srv::SetSpeedSliderFraction>::SharedPtr set_speed_slider_srv_;
   rclcpp::Service<ur_msgs::srv::SetIO>::SharedPtr set_io_srv_;
   rclcpp::Service<ur_msgs::srv::SetPayload>::SharedPtr set_payload_srv_;
@@ -169,10 +176,20 @@ protected:
   ur_dashboard_msgs::msg::SafetyMode safety_mode_msg_;
   std_msgs::msg::Bool program_running_msg_;
 
+  // Parameters from ROS for gpio_controller
+  std::shared_ptr<gpio_controller::ParamListener> param_listener_;
+  gpio_controller::Params params_;
+
   static constexpr double ASYNC_WAITING = 2.0;
   // TODO(anyone) publishers to add: tcp_pose_pub_
   // TODO(anyone) subscribers to add: script_command_sub_
   // TODO(anyone) service servers to add: resend_robot_program_srv_, deactivate_srv_, set_payload_srv_, tare_sensor_srv_
+
+  /**
+   * @brief wait until a command interface isn't in state ASYNC_WAITING anymore or until the parameter maximum_retries
+   * have been reached
+   */
+  bool waitForAsyncCommand(std::function<double(void)> get_value);
 };
 }  // namespace ur_controllers
 

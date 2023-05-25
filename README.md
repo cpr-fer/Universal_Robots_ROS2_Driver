@@ -113,14 +113,11 @@ Each of these stages also performs integration tests using ursim. In order to ex
 ## Packages in the Repository:
 
   - `ur` - Meta-package that provides a single point of installation for the released packages.
-  - `ur_bringup` - launch file and run-time configurations, e.g. controllers (DEPRECATED).
   - `ur_calibration` - tool for extracting calibration information from a real robot.
   - `ur_controllers` - implementations of controllers specific for UR robots.
   - `ur_dashboard_msgs` - package defining messages used by dashboard node.
   - `ur_moveit_config` - example MoveIt configuration for UR robots.
   - `ur_robot_driver` - driver / hardware interface for communication with UR robots.
-
-Deprecation: The `ur_bringup` package is deprecated and will be removed from Iron Irwini on.
 
 ## Getting Started
 
@@ -167,7 +164,7 @@ building might fail occasionally.
    For using this driver with ROS2 `foxy`. Checkout [foxy
    branch](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/foxy), for using it
    with ROS2 ``galactic``, use the [galactic branch](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/galactic), for using it
-   with ROS2 ``humble``, use the [galactic branch](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/humble).
+   with ROS2 ``humble``, use the [humble branch](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/humble).
 
    Once installed, please make sure to actually [source ROS2](https://docs.ros.org/en/rolling/Tutorials/Beginner-CLI-Tools/Configuring-ROS2-Environment.html#source-the-setup-files) before proceeding.
 
@@ -230,5 +227,5 @@ Code is auto-formatted with clang-format 10 whenever a git commit is made. Pleas
 
 Prepare the pre-commit formatting to run like this:
   ```
-  pre-commit install`
+  pre-commit install
   ```
